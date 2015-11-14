@@ -1,4 +1,4 @@
-package com.herazade.echonest.tools.swing;
+package com.herazade.echonest.tools.gui.swing;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

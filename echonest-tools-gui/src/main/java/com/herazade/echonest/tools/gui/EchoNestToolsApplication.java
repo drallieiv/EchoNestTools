@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.herazade.echonest.tools;
+package com.herazade.echonest.tools.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,11 +28,16 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 public class EchoNestToolsApplication {
 
+	/**
+	 * Logger
+	 */
+	private static Logger logger = LoggerFactory.getLogger(EchoNestToolsApplication.class);
+
 	public static void main(String[] args) throws Exception {
-		  new SpringApplicationBuilder(EchoNestToolsApplication.class)
-          .headless(false)
-          .web(false)
-          .run(args);
+		new SpringApplicationBuilder(EchoNestToolsApplication.class)
+		.headless(false)
+		.web(false)
+		.run(args);
 	}
 
 }

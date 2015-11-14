@@ -1,4 +1,4 @@
-package com.herazade.echonest.tools.swing.action;
+package com.herazade.echonest.tools.gui.swing.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 
-import com.herazade.echonest.tools.swing.Messages;
+import com.herazade.echonest.tools.gui.swing.Messages;
 
 /**
  * Exit application action. Close frame

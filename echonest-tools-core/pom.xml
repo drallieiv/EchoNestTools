@@ -1,10 +1,28 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.herazade.echonest</groupId>
-    <artifactId>echonest-tools-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>echonest-tools-core</artifactId>
-  <name>EchoNest Tools Core</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.herazade.echonest</groupId>
+		<artifactId>echonest-tools-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>echonest-tools-core</artifactId>
+	<name>EchoNest Tools Core</name>
+
+	<properties>
+		<jen-api.version>4.x.t</jen-api.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.googlecode.jen-api</groupId>
+			<artifactId>jen-api</artifactId>
+			<version>${jen-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+	</dependencies>
 </project>
