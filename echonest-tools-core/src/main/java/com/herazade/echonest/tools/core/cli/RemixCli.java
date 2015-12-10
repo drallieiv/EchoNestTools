@@ -12,6 +12,7 @@ import java.util.List;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,15 +52,15 @@ public class RemixCli {
 		Logger logger = LoggerFactory.getLogger(RemixCli.class);
 
 		File out = new File("target/remixed.wav");
+
 		try (
-				InputStream inFile = RemixCli.class.getClassLoader().getResourceAsStream("files/test-music.mp3");
+				InputStream inFile = RemixCli.class.getClassLoader().getResourceAsStream("files/test-music.wav");
 				OutputStream outFile = new FileOutputStream(out);
 				AudioInputStream audioIn = audioManager.openMp3AsPcm(inFile);) {
 
 			List<TimedEvent> remix = new ArrayList<TimedEvent>();
-			remix.add(new TimedEvent(200, 5));
-			// remix.add(new TimedEvent(18, 4));
-			// remix.add(new TimedEvent(0, 30));
+			remix.add(new TimedEvent(0, 5));
+			remix.add(new TimedEvent(5, 5));
 			audioManager.writeRemix(remix, audioIn, outFile);
 
 			outFile.close();

@@ -40,6 +40,13 @@
 		<!-- <version>1.0.1</version> -->
 		<!-- </dependency> -->
 
+		<!-- MP3 -->
+		<dependency>
+			<groupId>javazoom</groupId>
+			<artifactId>jlayer</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>com.googlecode.soundlibs</groupId> -->
 		<!-- <artifactId>mp3spi</artifactId> -->
