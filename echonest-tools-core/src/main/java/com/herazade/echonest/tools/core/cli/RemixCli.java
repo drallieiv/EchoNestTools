@@ -59,8 +59,9 @@ public class RemixCli {
 				AudioInputStream audioIn = audioManager.openMp3AsPcm(inFile);) {
 
 			List<TimedEvent> remix = new ArrayList<TimedEvent>();
-			remix.add(new TimedEvent(0, 5));
-			remix.add(new TimedEvent(5, 5));
+			remix.add(new TimedEvent(0, 1));
+			remix.add(new TimedEvent(1, 1));
+			remix.add(new TimedEvent(3, 1));
 			audioManager.writeRemix(remix, audioIn, outFile);
 
 			outFile.close();

@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,31 +86,16 @@ public class AudioManager {
 		writeWavHeaders(out, format, dataLength);
 
 		// Dump Source data once
-		// byte[] srcData = IOUtils.toByteArray(in);
-		// ByteBuffer dataBuffer = ByteBuffer.wrap(srcData);
+		byte[] srcData = IOUtils.toByteArray(in);
 
 		// Append all audio data
 		for (TimedEvent timedEvent : remix) {
 			logger.debug("Start writing next part : [{}]", timedEvent);
 
-			long nbBytesToSkip = (long) (timedEvent.getStart() * bytesPerSecond);
-			long nbBytesSkipped = 0;
-			while (nbBytesSkipped < nbBytesToSkip) {
-				long nextSkipSize = Math.min(in.available(), nbBytesToSkip - nbBytesSkipped);
-				nbBytesSkipped += in.skip(nextSkipSize);
-			}
+			int startByte = (int) (timedEvent.getStart() * bytesPerSecond);
+			int endByte = (int) (startByte + timedEvent.getDuration() * bytesPerSecond);
 
-			double byteToRead = timedEvent.getDuration() * bytesPerSecond;
-			int byteRead = 0;
-
-			logger.info("start copying {}s ({} bytes) of audio", timedEvent.getDuration(), byteToRead);
-			while (byteRead < byteToRead) {
-				int currentBufferSize = (int) Math.min(bufferSize, byteToRead - byteRead);
-				byte[] buffer = new byte[currentBufferSize];
-				in.read(buffer);
-				out.write(buffer);
-				byteRead += currentBufferSize;
-			}
+			IOUtils.write(Arrays.copyOfRange(srcData, startByte, endByte), out);
 			logger.debug("Done");
 		}
 
