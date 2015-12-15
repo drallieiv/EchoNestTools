@@ -1,20 +1,13 @@
 package com.herazade.echonest.tools.core.audio;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.SequenceInputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import javax.media.Format;
-import javax.sound.sampled.AudioFileFormat.Type;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,11 +18,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.echonest.api.v4.TimedEvent;
-import com.sun.media.Log;
 
+/**
+ * Manager who can read and write audio files
+ * 
+ * @author drallieiv
+ *
+ */
 public class AudioManager {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
+
+	// If Dump Data in Memory
+	private byte[] srcData;
+
+	// Temp File for source Audio Data
+	private File tempFile;
 
 	/**
 	 * Samples 16bits/s
@@ -57,9 +61,9 @@ public class AudioManager {
 
 		AudioInputStream decodedIs = AudioSystem.getAudioInputStream(decodedFormat, in);
 
-		// Copy Everything into buffer
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(decodedIs);
-		return new AudioInputStream(bufferedInputStream, decodedIs.getFormat(), decodedIs.getFrameLength());
+		 // Copy Everything into buffer
+		 BufferedInputStream bufferedInputStream = new BufferedInputStream(decodedIs);
+		 return new AudioInputStream(bufferedInputStream, decodedIs.getFormat(), decodedIs.getFrameLength());
 	}
 
 	/**
@@ -72,7 +76,6 @@ public class AudioManager {
 
 		AudioFormat format = in.getFormat();
 		int bytesPerSecond = format.getFrameSize() * (int) format.getFrameRate();
-		float myByteRate = format.getSampleRate() * format.getChannels() * format.getSampleSizeInBits() / 8;
 		// 1024 frame arbitrary buffer
 		int bufferSize = 1024 * format.getFrameSize();
 
@@ -81,25 +84,58 @@ public class AudioManager {
 		for (TimedEvent timedEvent : remix) {
 			dataLength += timedEvent.getDuration() * bytesPerSecond;
 		}
+		logger.debug("Expected file size : {} bytes", dataLength);
 
 		// Prepare The Whole Data
+		logger.debug("Create Wav file Headers");
 		writeWavHeaders(out, format, dataLength);
 
-		// Dump Source data once
-		byte[] srcData = IOUtils.toByteArray(in);
+		// Save Input Stream
+		logger.debug("Save input Stream");
+		saveInputStream(in);
 
 		// Append all audio data
 		for (TimedEvent timedEvent : remix) {
 			logger.debug("Start writing next part : [{}]", timedEvent);
 
-			int startByte = (int) (timedEvent.getStart() * bytesPerSecond);
-			int endByte = (int) (startByte + timedEvent.getDuration() * bytesPerSecond);
+			int startByte = format.getFrameSize() * (int) (timedEvent.getStart() * bytesPerSecond / format.getFrameSize());
+			int endByte = format.getFrameSize() * (int) ((startByte + timedEvent.getDuration() * bytesPerSecond) / format.getFrameSize());
 
-			IOUtils.write(Arrays.copyOfRange(srcData, startByte, endByte), out);
-			logger.debug("Done");
+			copyBytesFromInputStream(startByte, endByte, out);
 		}
 
 	}
+
+	private void copyBytesFromInputStream(int startByte, int endByte,
+			OutputStream out) throws IOException {
+		IOUtils.write(Arrays.copyOfRange(srcData, startByte, endByte), out);
+	}
+
+	private void saveInputStream(AudioInputStream in) throws IOException {
+		// Dump Source data once
+		logger.debug("Load the full Music in Memory. Please wait ...");
+		srcData = IOUtils.toByteArray(in);
+	}
+
+	// private void copyBytesFromInputStream(int startByte, int endByte,
+	// OutputStream out) throws IOException {
+	// RandomAccessFile raf = new RandomAccessFile(tempFile, "r");
+	// int len = endByte - startByte;
+	// byte[] part = new byte[len];
+	// raf.readFully(part, startByte, len);
+	// IOUtils.write(part, out);
+	// }
+	//
+	// private void saveInputStream(AudioInputStream in) throws IOException {
+	// // Save to Temp File
+	// tempFile = File.createTempFile("enRemix", null);
+	// logger.debug("Write raw Audio Data to temp file : {}",
+	// tempFile.getAbsolutePath());
+	// try (FileOutputStream tempFileOs = new FileOutputStream(tempFile);) {
+	// IOUtils.copy(in, tempFileOs);
+	// logger.debug("Audio Data temp file written");
+	// }
+	// }
 
 	/**
 	 * Manually write a wav header

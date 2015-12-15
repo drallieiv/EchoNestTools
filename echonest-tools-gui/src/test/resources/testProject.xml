@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <projectName>Test Project</projectName>
+   <mp3FilePath>C:\test-music.mp3</mp3FilePath>
+  <remixStrategy class="ManualRemix">
+    <remix>
+      <TimedEvent>
+        <start>30.0</start>
+        <duration>30.0</duration>
+        <confidence>0.0</confidence>
+      </TimedEvent>
+    </remix>
+  </remixStrategy>
+</project>

@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import org.springframework.util.StringUtils;
 
 import com.echonest.api.v4.TrackAnalysis;
+import com.herazade.echonest.tools.core.remix.strategy.RemixStrategy;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * EchoNestTools Project
@@ -13,6 +15,7 @@ import com.echonest.api.v4.TrackAnalysis;
  * @author drallieiv
  *
  */
+@XStreamAlias("project")
 public class EntProject {
 
 	/**
@@ -21,10 +24,15 @@ public class EntProject {
 	private String projectName;
 
 	/**
-	 * Filesystem Path to the MP3 File
+	 * Filesystem Path to the input MP3 File
 	 */
 	private String mp3FilePath;
-
+	
+	/**
+	 * Filesystem Path to the output wave File
+	 */
+	private String remixFilePath;
+	
 	/**
 	 * EchoNest Track Id
 	 */
@@ -34,6 +42,11 @@ public class EntProject {
 	 * Track Analysis
 	 */
 	private TrackAnalysis analysis;
+	
+	/**
+	 * Defines how the remix will be made 
+	 */
+	private RemixStrategy remixStrategy;
 
 	/**
 	 * Has the file been submitted to EchoNest
@@ -62,6 +75,17 @@ public class EntProject {
 			throw new IllegalArgumentException("Missing MP3 File Path");
 		}
 		return new File(mp3FilePath);
+	}
+	
+	/**
+	 * Get Remix Path or generate new one if not defined
+	 * @return
+	 */
+	public String getRemixFilePath(){
+		if(remixFilePath == null){
+			remixFilePath = this.mp3FilePath.replaceFirst("\\.mp3$", "\\.remix.wav");
+		}
+		return remixFilePath;
 	}
 
 	// BASIC GETTERS AND SETTERS
@@ -125,5 +149,21 @@ public class EntProject {
 	public void setAnalysis(TrackAnalysis analysis) {
 		this.analysis = analysis;
 	}
+
+	/**
+	 * @return the remixStrategy
+	 */
+	public RemixStrategy getRemixStrategy() {
+		return remixStrategy;
+	}
+
+	/**
+	 * @param remixStrategy the remixStrategy to set
+	 */
+	public void setRemixStrategy(RemixStrategy remixStrategy) {
+		this.remixStrategy = remixStrategy;
+	}
+	
+	
 
 }

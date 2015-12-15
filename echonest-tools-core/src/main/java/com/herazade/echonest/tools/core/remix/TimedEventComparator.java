@@ -80,4 +80,11 @@ public class TimedEventComparator {
 		this.timedEvents = timedEvents;
 	}
 
+	/**
+	 * @return the timedEvents
+	 */
+	public List<TimedEvent> getTimedEvents() {
+		return timedEvents;
+	}
+
 }

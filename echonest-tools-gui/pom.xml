@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.herazade.echonest</groupId>
@@ -27,6 +26,13 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>com.herazade.echonest</groupId>
+			<artifactId>echonest-tools-looper</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -66,6 +72,78 @@
 				</resources>
 			</build>
 		</profile>
+		<profile>
+			<id>exe</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>exe</value>
+				</property>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/config/${env}</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<properties>
+				<env>exe</env>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.akathist.maven.plugins.launch4j</groupId>
+						<artifactId>launch4j-maven-plugin</artifactId>
+						<version>1.5.1</version>
+						<executions>
+							<execution>
+								<id>l4j-clui</id>
+								<phase>package</phase>
+								<goals>
+									<goal>launch4j</goal>
+								</goals>
+								<configuration>
+									<headerType>console</headerType>
+									<jar>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
+									<outfile>${project.build.directory}/herazadeLooper.exe</outfile>
+									<cmdLine></cmdLine>
+									<stayAlive>true</stayAlive>
+									<downloadUrl>http://java.com/download</downloadUrl>
+									<classPath>
+										<mainClass>com.herazade.echonest.tools.cli.EntRemixCli</mainClass>
+										<preCp>anything</preCp>
+									</classPath>
+									<icon>application.ico</icon>
+									<jre>
+										<minVersion>1.8.0</minVersion>
+										<jdkPreference>preferJre</jdkPreference>
+									</jre>
+									<versionInfo>
+										<fileVersion>1.0.0.0</fileVersion>
+										<txtFileVersion>${project.version}</txtFileVersion>
+										<fileDescription>${project.name}</fileDescription>
+										<copyright>herazade.com</copyright>
+										<productVersion>1.0.0.0</productVersion>
+										<txtProductVersion>1.0.0.0</txtProductVersion>
+										<productName>${project.name}</productName>
+										<companyName>herazade.com</companyName>
+										<internalName>herazade.echonest.looper</internalName>
+										<originalFilename>herazadeLooper.exe</originalFilename>
+									</versionInfo>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<build>
@@ -73,6 +151,30 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.2.7.RELEASE</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>com.herazade.echonest.tools.cli.EntRemixCli</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

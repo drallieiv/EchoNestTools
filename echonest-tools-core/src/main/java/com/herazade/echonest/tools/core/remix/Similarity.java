@@ -5,16 +5,12 @@ import java.util.List;
 
 import com.echonest.api.v4.Segment;
 
-public class Remix {
+public class Similarity {
 
 	/**
-	 * Treshow for segment similarity
+	 * Treshold for segment similarity
 	 */
 	private static final int SIMILAR_TRESHOLD = 1;
-
-	public Remix() {
-		// TODO Auto-generated constructor stub
-	}
 
 	// Reduce the number of segments by merging them if similar
 	public List<Segment> filterSegments(List<Segment> allSegments) {

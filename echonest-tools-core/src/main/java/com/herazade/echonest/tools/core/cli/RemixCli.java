@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.echonest.api.v4.TimedEvent;
 import com.herazade.echonest.tools.core.audio.AudioManager;
+import com.herazade.echonest.tools.core.remix.strategy.ManualRemix;
 
 /**
  * Main Class for Command Line Interface
@@ -54,15 +55,17 @@ public class RemixCli {
 		File out = new File("target/remixed.wav");
 
 		try (
-				InputStream inFile = RemixCli.class.getClassLoader().getResourceAsStream("files/test-music.wav");
+				InputStream inFile = RemixCli.class.getClassLoader().getResourceAsStream("files/test-music.mp3");
 				OutputStream outFile = new FileOutputStream(out);
 				AudioInputStream audioIn = audioManager.openMp3AsPcm(inFile);) {
 
-			List<TimedEvent> remix = new ArrayList<TimedEvent>();
-			remix.add(new TimedEvent(0, 1));
-			remix.add(new TimedEvent(1, 1));
-			remix.add(new TimedEvent(3, 1));
-			audioManager.writeRemix(remix, audioIn, outFile);
+			ManualRemix remix = ManualRemix.buildNew().addPart(0, 45.60753);
+			for (int i = 0; i < 60; i++) {
+				remix.addPart(45.60753, 104.93201);
+			}
+			remix.addPart(104.93201, 213);
+
+			audioManager.writeRemix(remix.getRemix(null), audioIn, outFile);
 
 			outFile.close();
 			logger.info("Done file written : {}", out.getAbsolutePath());
