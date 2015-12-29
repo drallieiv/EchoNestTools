@@ -24,6 +24,7 @@ import org.springframework.oxm.XmlMappingException;
 import com.echonest.api.v4.EchoNestException;
 import com.echonest.api.v4.TimedEvent;
 import com.echonest.api.v4.TrackAnalysis;
+import com.herazade.echonest.tools.core.EchoNestAPIConfig;
 import com.herazade.echonest.tools.core.EntCoreConfiguration;
 import com.herazade.echonest.tools.core.audio.AudioManager;
 import com.herazade.echonest.tools.core.project.EntProject;
@@ -45,7 +46,7 @@ public class EntRemixCli {
 			return;
 		}
 
-		ApplicationContext context = new AnnotationConfigApplicationContext(EntCoreConfiguration.class);
+		ApplicationContext context = new AnnotationConfigApplicationContext(EntCoreConfiguration.class, EchoNestAPIConfig.class);
 		EntProjectManager entProjectManager = context.getBean(EntProjectManager.class);
 
 		// 1. LOADING

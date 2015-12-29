@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.oxm.support.AbstractMarshaller;
@@ -18,15 +16,19 @@ import org.springframework.oxm.xstream.XStreamMarshaller;
 
 import com.echonest.api.v4.TimedEvent;
 import com.herazade.echonest.tools.core.project.EntProject;
+import com.herazade.echonest.tools.core.project.EntProjectManager;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @Configuration
-@ComponentScan
-@Import(value = EchoNestAPIConfig.class)
 public class EntCoreConfiguration {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
+
+	@Bean
+	public EntProjectManager getEntProjectManager() {
+		return new EntProjectManager();
+	}
 
 	@Bean
 	public AbstractMarshaller getMarshaller() throws ClassNotFoundException {

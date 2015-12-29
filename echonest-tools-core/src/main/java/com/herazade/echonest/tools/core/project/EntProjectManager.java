@@ -99,8 +99,6 @@ public class EntProjectManager {
 
 		JSONObject analysisMap = (JSONObject) Commander.fetchURLAsJSON(track.getAnalysisURL());
 
-		String jsonString = analysisMap.toJSONString();
-
 		TrackAnalysis analysis = new TrackAnalysis(analysisMap);
 
 		project.setAnalysis(analysis);
